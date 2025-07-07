@@ -24,8 +24,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Global prefix (must be set before Swagger setup)
-  app.setGlobalPrefix('api');
+  // Global prefix with exclusions for Swagger
+  app.setGlobalPrefix('api', {
+    exclude: ['/docs', '/docs/(.*)'],
+  });
 
   // Swagger API Documentation
   const config = new DocumentBuilder()
@@ -46,7 +48,7 @@ async function bootstrap() {
   await app.listen(port);
 
   logger.log(`Application is running on: http://localhost:${port}/api`);
-  logger.log(`Swagger documentation: http://localhost:${port}/api/docs`);
+  logger.log(`Swagger documentation: http://localhost:${port}/docs`);
 }
 
 bootstrap().catch((error) => {
