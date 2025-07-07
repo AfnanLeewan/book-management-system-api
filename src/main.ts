@@ -24,6 +24,9 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // Global prefix (must be set before Swagger setup)
+  app.setGlobalPrefix('api');
+
   // Swagger API Documentation
   const config = new DocumentBuilder()
     .setTitle('Book Management API')
@@ -38,9 +41,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
-
-  // Global prefix
-  app.setGlobalPrefix('api');
 
   const port = configService.get<number>('PORT') || 3000;
   await app.listen(port);
