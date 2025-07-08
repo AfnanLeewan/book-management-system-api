@@ -5,6 +5,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entities/book.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { BooksQueryDto } from './dto/books-query.dto';
 
 export interface PaginatedResult<T> {
   data: T[];
@@ -26,9 +27,14 @@ export class BooksService {
     return await this.bookRepository.save(book);
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<PaginatedResult<Book>> {
-    const { page = 1, limit = 10 } = paginationDto;
+  async findAll(queryDto: BooksQueryDto): Promise<PaginatedResult<Book>> {
+    const { page = 1, limit = 10, search } = queryDto;
     const skip = (page - 1) * limit;
+
+    if (search) {
+      // If search is provided, use the search functionality
+      return this.search(search, { page, limit });
+    }
 
     const [data, total] = await this.bookRepository.findAndCount({
       skip,

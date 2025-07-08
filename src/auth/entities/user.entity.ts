@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  Index,
 } from 'typeorm';
 
 export enum UserRole {
@@ -13,7 +12,6 @@ export enum UserRole {
 }
 
 @Entity('users')
-@Index(['email'], { unique: true })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;

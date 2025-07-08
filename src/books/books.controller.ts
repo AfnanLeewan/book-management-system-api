@@ -24,6 +24,7 @@ import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { BooksQueryDto } from './dto/books-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Books')
@@ -49,7 +50,9 @@ export class BooksController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all books with pagination' })
+  @ApiOperation({
+    summary: 'Get all books with pagination and optional search',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of books retrieved successfully.',
@@ -66,8 +69,14 @@ export class BooksController {
     type: Number,
     description: 'Items per page',
   })
-  async findAll(@Query() paginationDto: PaginationDto) {
-    return await this.booksService.findAll(paginationDto);
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Search query for title or author',
+  })
+  async findAll(@Query() queryDto: BooksQueryDto) {
+    return await this.booksService.findAll(queryDto);
   }
 
   @Get('search')
